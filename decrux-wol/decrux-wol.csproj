@@ -6,6 +6,7 @@
         <RootNamespace>decrux_wol</RootNamespace>
         <Nullable>enable</Nullable>
         <UseWPF>true</UseWPF>
+        <ApplicationIcon>network-wol-icon.ico</ApplicationIcon>
     </PropertyGroup>
 
     <ItemGroup>
