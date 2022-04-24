@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net6.0-windows</TargetFramework>
+        <RootNamespace>decrux_wol</RootNamespace>
+        <Nullable>enable</Nullable>
+        <UseWPF>true</UseWPF>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <None Remove="Resources\network-wired-solid.svg" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="network-wol-icon.ico" />
+      <Resource Include="network-wol-icon.ico" />
+    </ItemGroup>
+
+</Project>
