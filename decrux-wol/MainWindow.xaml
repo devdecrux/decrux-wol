@@ -41,6 +41,7 @@
         </TextBox>
         
         <Button
+            Click="WakePc"
             HorizontalAlignment="Center"
             Margin="0 10 0 0"
             MaxWidth="80"
