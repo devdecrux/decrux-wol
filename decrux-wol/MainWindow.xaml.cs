@@ -1,18 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Globalization;
 using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace decrux_wol
 {
@@ -31,9 +20,48 @@ namespace decrux_wol
 
         private void WakePc(object sender, RoutedEventArgs e)
         {
+
+            String ipAddress = IpAddressTextBox.Text;
+            String macAddress = MacAddressTextBox.Text;
+
+            byte[] macAddressBytes = TransformMacAddress2Bytes(macAddress);
+            byte[] bytes = new byte[6 + 16 * macAddressBytes.Length];
+
+            for (int i = 0; i < 6; i++)
+            {
+                bytes[i] = 0xff;
+            }
+
+            for (int i = 6; i < bytes.Length; i += macAddressBytes.Length)
+            {
+                Array.Copy(macAddressBytes, 0, bytes, i, macAddressBytes.Length);
+            }
+            
             UdpClient client = new UdpClient();
-            throw new NotImplementedException();
+
+            // TODO make sure to implement functionality for resolving hostnames e.g. www.decrux.io/decrux.io to IP Addresses.
+            //Dns.GetHostAddresses();
+            
+            client.Send(bytes, bytes.Length, ipAddress, Port);
+            client.Close();
         }
-        
+
+        private byte[] TransformMacAddress2Bytes(String macAddress)
+        {
+            byte[] bytes = new byte[6];
+            
+            // TODO use regex to split a MAC address by ":" or "-"
+            // Right now this returns as elements the split character too and breaks stuff.
+            //String[] hex = Regex.Split(macAddress, "(\\:|\\-)");
+            
+            String[] hex = macAddress.Split("-");
+            for (int i = 0; i < 6; i++)
+            {
+                bytes[i] = (byte)int.Parse(hex[i], NumberStyles.HexNumber);
+            }
+
+            return bytes;
+        }
+
     }
 }
