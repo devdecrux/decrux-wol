@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Windows;
 
@@ -21,8 +22,8 @@ namespace decrux_wol
         private void WakePc(object sender, RoutedEventArgs e)
         {
 
-            String ipAddress = IpAddressTextBox.Text;
-            String macAddress = MacAddressTextBox.Text;
+            String broadcastAddress = BroadcastAddressTextBox.Text.Trim();
+            String macAddress = MacAddressTextBox.Text.Trim();
 
             byte[] macAddressBytes = TransformMacAddress2Bytes(macAddress);
             byte[] bytes = new byte[6 + 16 * macAddressBytes.Length];
@@ -42,8 +43,20 @@ namespace decrux_wol
             // TODO make sure to implement functionality for resolving hostnames e.g. www.decrux.io/decrux.io to IP Addresses.
             //Dns.GetHostAddresses();
             
-            client.Send(bytes, bytes.Length, ipAddress, Port);
+            client.Send(bytes, bytes.Length, broadcastAddress, Port);
             client.Close();
+        }
+
+        // TODO this is strictly a prototype method for pinging a host after
+        // a magic packet has been sent using the broadcast address.
+        // At least for now this is my way of "checking" if the host is awake.
+        // This will be refactored ASAP.
+        private void PingPc(object sender, RoutedEventArgs e)
+        {
+            String ipAddress = IpAddressTextBox.Text.Trim();
+            Ping ping = new Ping();
+            PingReply pingReply = ping.Send(ipAddress, 1000);
+            MessageBox.Show(pingReply.Status.ToString());
         }
 
         private byte[] TransformMacAddress2Bytes(String macAddress)
